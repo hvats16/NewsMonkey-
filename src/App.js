@@ -6,9 +6,11 @@ import News from "./components/News";
 
 export default class App extends Component {
   render() {
-    return <div className="conatiner">
-      <Navbar />
-      <News/>
-    </div>;
+    return (
+      <div className="conatiner">
+        <Navbar />
+        <News pageSize={5} />
+      </div>
+    );
   }
 }
