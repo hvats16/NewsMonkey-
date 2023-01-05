@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 export class Navbar extends Component {
   static propTypes = {};
@@ -26,13 +27,43 @@ export class Navbar extends Component {
               id="navbarSupportedContent">
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <li className="nav-item">
-                  <a className="nav-link active" aria-current="page" href="/">
+                  <a className="nav-link" aria-current="page" href="/home">
                     Home
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="/about">
-                    About
+                  <Link className="nav-link" to="/business">
+                  Business 
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="/entertainment">
+                  Entertainment
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="/general">
+                  General
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="/health">
+                  Health
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="/science">
+                  Science
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="/sports">
+                  Sports
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="/technology">
+                  Technology
                   </a>
                 </li>
               </ul>
