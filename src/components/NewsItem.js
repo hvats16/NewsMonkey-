@@ -18,7 +18,7 @@ export class NewsItem extends Component {
               {source}
             </span>
           </div>
-          <img
+          <img style={{height:"200px"}}
             src={
               !imageUrl
                 ? "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLgUYZv9pb1z3QHmveMlqSvehqZYVrwZf0ErD2RgkyJQ&s"
@@ -28,8 +28,8 @@ export class NewsItem extends Component {
             alt="..."
           />
           <div className="card-body">
-            <h5 className="card-title"> {title}...</h5>
-            <p className="card-text">{description}...</p>
+            <h5 className="card-title"> {title.slice(0,50)}...</h5>
+            <p className="card-text">{description.slice(0,150)}...</p>
             <p className="card-text">
               <small className="text-muted">
                 By {author ? author : "Unknown"} on{" "}
