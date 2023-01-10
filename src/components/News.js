@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import NewsItem from "./NewsItem";
 import Spinner from "./spinner";
 import PropTypes from "prop-types";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export class News extends Component {
   static defaultsProps = {
@@ -18,78 +19,77 @@ export class News extends Component {
     super();
     this.state = {
       articles: [],
-      loading: false,
+      loading: true,
       page: 1,
     };
   }
 
   async updateNews() {
+    this.props.setProgress(10);
     const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=0007bc4ec18c4a4380a59ddd7aa9a066&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
+
+    this.props.setProgress(30);
     this.setState({ loading: true });
     let parsedData = await data.json();
+
+    this.props.setProgress(70);
     this.setState({
       articles: parsedData.articles,
       totalArticles: parsedData.totalResults,
       loading: false,
     });
+    this.props.setProgress(100);
   }
 
   async componentDidMount() {
     this.updateNews();
   }
+  fetchMoreData = async () => {
+    const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=0007bc4ec18c4a4380a59ddd7aa9a066&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+    let data = await fetch(url);
+    let parsedData = await data.json();
+    this.setState({
+      articles: this.state.articles.concat(parsedData.articles),
+      totalArticles: parsedData.totalResults,
+    });
+  };
 
-  handlePreviousClick = async () => {
-    this.setState({
-      page: this.state.page - 1,
-    });
-    this.updateNews();
-  };
-  handleNextClick = async () => {
-    this.setState({
-      page: this.state.page + 1,
-    });
-    this.updateNews();
-  };
   render() {
     return (
-      <div className="container my-3">
-        <h2>NewsMonkey - Top News Headlines</h2>
+      <>
+        <div className="container my-3">
+          <h2>NewsMonkey - Top News Headlines</h2>
+        </div>
         {this.state.loading && <Spinner />}
-        <div className="row">
-          {this.state.articles.map((element) => {
-            return (
-              <div className="col-md-3" key={element.url}>
-                <NewsItem
-                  title={element.title ? element.title : ""}
-                  description={element.description ? element.description : ""}
-                  imageUrl={element.urlToImage}
-                  newsUrl={element.url}
-                  author={element.author}
-                  date={element.publishedAt}
-                  source={element.source.name}
-                />
-              </div>
-            );
-          })}
-        </div>
-        <div className="container d-flex justify-content-between">
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={this.handlePreviousClick}
-            disabled={this.state.page <= 1}>
-            &larr; Previous
-          </button>
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={this.handleNextClick}
-            disabled={this.state.page + 1 > 5}>
-            Next &rarr;
-          </button>
-        </div>
-      </div>
+        <InfiniteScroll
+          dataLength={this.state.articles.length}
+          next={this.fetchMoreData}
+          hasMore={this.state.articles.length}
+          loader={<Spinner />}>
+          <div className="container">
+            <div className="row">
+              {this.state.articles.map((element) => {
+                return (
+                  <div className="col-md-3" key={element.url}>
+                    <NewsItem
+                      title={element.title ? element.title : ""}
+                      description={
+                        element.description ? element.description : ""
+                      }
+                      imageUrl={element.urlToImage}
+                      newsUrl={element.url}
+                      author={element.author}
+                      date={element.publishedAt}
+                      source={element.source.name}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </InfiniteScroll>
+      </>
     );
   }
 }
